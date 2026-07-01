@@ -548,11 +548,11 @@ Cardápio online do Sacolão ABC
 -->
 <script>
   const LOJA = {
-    nome: "Sacolão ABC",
+    nome: "Sacolão Abastecer Caiçara",
     tagline: "Frescos, direto para sua casa",
-    endereco: "Rua Exemplo, 123 — Belo Horizonte/MG",
+    endereco: "Rua Antonio Peixoto Guimaraes, 219 — Belo Horizonte/MG",
     // Número do WhatsApp: 55 + DDD + número, tudo junto, sem símbolos
-    whatsapp: "5531999999999",
+    whatsapp: "5531982951285",
     horario: "Seg a Sáb, 8h às 18h"
   };
 
