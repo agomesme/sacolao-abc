@@ -1,2 +1,1061 @@
+[index.html](https://github.com/user-attachments/files/29576405/index.html)
 # sacolao-abc
 Cardápio online do Sacolão ABC
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sacolão ABC — Peça pelo WhatsApp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #1F4A2E;
+    --verde-vivo: #4A8B3B;
+    --laranja: #E67E22;
+    --tomate: #C0392B;
+    --creme: #FAF6EC;
+    --creme-2: #F2ECDC;
+    --carvao: #1A1A1A;
+    --linha: #E5DFD1;
+    --cinza: #6B6B6B;
+    --aviso-bg: #FEF3E2;
+    --aviso-border: #E67E22;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--creme);
+    color: var(--carvao);
+    padding-bottom: 100px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: var(--verde);
+    color: var(--creme);
+    padding: 20px 16px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.04) 0, transparent 40%),
+                      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.03) 0, transparent 40%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: relative;
+  }
+  .brand h1 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: clamp(24px, 5vw, 32px);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .brand p {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-top: 6px;
+  }
+  .cart-btn {
+    background: var(--laranja);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(230,126,34,0.3);
+    transition: transform 0.15s;
+    font-family: inherit;
+  }
+  .cart-btn:hover { transform: translateY(-1px); }
+  .cart-count {
+    background: white;
+    color: var(--laranja);
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .info-loja {
+    background: var(--creme-2);
+    border-bottom: 1px solid var(--linha);
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--cinza);
+    text-align: center;
+  }
+  .info-loja strong { color: var(--verde); }
+  .info-loja span { margin: 0 6px; }
+
+  .categorias {
+    background: var(--creme);
+    border-bottom: 1px solid var(--linha);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .cat-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 0 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    scrollbar-width: none;
+  }
+  .cat-scroll::-webkit-scrollbar { display: none; }
+  .cat-btn {
+    background: transparent;
+    border: 1.5px solid var(--linha);
+    color: var(--carvao);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .cat-btn.ativa {
+    background: var(--verde);
+    color: var(--creme);
+    border-color: var(--verde);
+  }
+
+  .aviso-peso {
+    background: var(--aviso-bg);
+    border-left: 3px solid var(--aviso-border);
+    padding: 10px 14px;
+    margin: 16px auto 0;
+    max-width: 1100px;
+    font-size: 13px;
+    color: var(--carvao);
+    border-radius: 6px;
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+  .categoria-titulo {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--verde);
+    margin: 24px 0 12px;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .categoria-titulo::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--linha);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  @media (min-width: 640px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 900px) {
+    .grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .produto {
+    background: white;
+    border: 1px solid var(--linha);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    transition: border-color 0.15s;
+  }
+  .produto:hover { border-color: var(--verde-vivo); }
+  .produto-emoji {
+    font-size: 40px;
+    line-height: 1;
+    text-align: center;
+    padding: 8px 0;
+  }
+  .produto-nome {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+    min-height: 36px;
+  }
+  .produto-preco {
+    display: inline-block;
+    background: var(--laranja);
+    color: white;
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 22px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    transform: rotate(-2deg);
+    align-self: flex-start;
+    line-height: 1.2;
+  }
+  .produto-preco .unidade {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    margin-left: 2px;
+  }
+  .produto-add {
+    background: var(--verde);
+    color: var(--creme);
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+    margin-top: auto;
+  }
+  .produto-add:hover { background: var(--verde-vivo); }
+
+  .produto-qtd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--verde);
+    border-radius: 10px;
+    padding: 4px;
+    margin-top: auto;
+  }
+  .produto-qtd button {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .produto-qtd button:hover { background: rgba(255,255,255,0.15); }
+  .produto-qtd .valor {
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+    flex: 1;
+    cursor: pointer;
+    padding: 6px 4px;
+    border-radius: 6px;
+  }
+  .produto-qtd .valor:hover { background: rgba(255,255,255,0.1); }
+
+  .flutuante {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--verde);
+    color: var(--creme);
+    padding: 14px 20px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 24px rgba(31,74,46,0.25);
+    cursor: pointer;
+    z-index: 20;
+    border: none;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 15px;
+    transform: translateY(120px);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .flutuante.visivel { transform: translateY(0); }
+  .flutuante-total { font-size: 17px; font-weight: 800; }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 100;
+  }
+  .modal-overlay.aberto { display: flex; }
+  .modal {
+    background: var(--creme);
+    width: 100%;
+    max-width: 520px;
+    max-height: 92vh;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    flex-direction: column;
+    animation: subir 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @media (min-width: 640px) {
+    .modal-overlay { align-items: center; }
+    .modal { border-radius: 20px; max-height: 88vh; }
+  }
+  @keyframes subir {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal-header {
+    padding: 20px 20px 12px;
+    border-bottom: 1px solid var(--linha);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--creme);
+    border-radius: 20px 20px 0 0;
+  }
+  .modal-header h2 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 20px;
+    color: var(--verde);
+    letter-spacing: -0.01em;
+  }
+  .fechar {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--cinza);
+    padding: 4px 8px;
+  }
+  .modal-body {
+    padding: 12px 20px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .item-carrinho {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--linha);
+  }
+  .item-carrinho:last-of-type { border-bottom: none; }
+  .item-info { flex: 1; }
+  .item-nome { font-weight: 600; font-size: 14px; }
+  .item-preco { font-size: 12px; color: var(--cinza); margin-top: 2px; }
+  .qtd-controle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: white;
+    border: 1px solid var(--linha);
+    border-radius: 999px;
+    padding: 2px;
+  }
+  .qtd-btn {
+    background: transparent;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--verde);
+    font-size: 16px;
+  }
+  .qtd-btn:hover { background: var(--creme-2); }
+  .qtd-valor {
+    font-weight: 700;
+    min-width: 46px;
+    text-align: center;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 6px;
+  }
+  .qtd-valor:hover { background: var(--creme-2); }
+  .vazio {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--cinza);
+  }
+
+  .secao {
+    background: white;
+    border-radius: 12px;
+    padding: 14px;
+    margin: 12px 0;
+    border: 1px solid var(--linha);
+  }
+  .secao h3 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 15px;
+    color: var(--verde);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .form-grupo { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+  .form-grupo:last-child { margin-bottom: 0; }
+  .form-grupo label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cinza);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .form-grupo input,
+  .form-grupo textarea,
+  .form-grupo select {
+    padding: 10px 12px;
+    border: 1px solid var(--linha);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    background: white;
+    width: 100%;
+    color: var(--carvao);
+  }
+  .form-grupo textarea { min-height: 60px; resize: vertical; }
+  .form-grupo input:focus,
+  .form-grupo textarea:focus,
+  .form-grupo select:focus {
+    outline: none;
+    border-color: var(--verde);
+  }
+  .form-linha { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+  .radio-grupo { display: flex; gap: 8px; }
+  .radio-opcao {
+    flex: 1;
+    padding: 10px;
+    border: 1.5px solid var(--linha);
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s;
+    background: white;
+  }
+  .radio-opcao.selecionado {
+    background: var(--verde);
+    color: var(--creme);
+    border-color: var(--verde);
+  }
+
+  .modal-footer {
+    padding: 16px 20px 20px;
+    border-top: 1px solid var(--linha);
+    background: var(--creme-2);
+    border-radius: 0 0 20px 20px;
+  }
+  .total-linha {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    font-size: 14px;
+    color: var(--cinza);
+  }
+  .total-linha.grande {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--verde);
+    padding-top: 10px;
+    margin-top: 8px;
+    border-top: 1px solid var(--linha);
+  }
+  .aviso-minimo {
+    background: #FEE;
+    color: var(--tomate);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 10px;
+    font-weight: 600;
+  }
+  .enviar-btn {
+    width: 100%;
+    background: #25D366;
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.15s;
+  }
+  .enviar-btn:hover { background: #1FB855; }
+  .enviar-btn:disabled {
+    background: #B8B8B8;
+    cursor: not-allowed;
+  }
+
+  footer {
+    text-align: center;
+    padding: 30px 20px 10px;
+    font-size: 12px;
+    color: var(--cinza);
+  }
+</style>
+</head>
+<body>
+
+<!--
+========================================================================
+  CONFIGURAÇÃO — edite aqui todos os dados da loja e produtos
+========================================================================
+-->
+<script>
+  const LOJA = {
+    nome: "Sacolão ABC",
+    tagline: "Frescos, direto para sua casa",
+    endereco: "Rua Exemplo, 123 — Belo Horizonte/MG",
+    // Número do WhatsApp: 55 + DDD + número, tudo junto, sem símbolos
+    whatsapp: "5531999999999",
+    horario: "Seg a Sáb, 8h às 18h"
+  };
+
+  const ENTREGA = {
+    pedido_minimo: 40.00,        // Valor mínimo do pedido em R$
+    taxa_entrega: 8.00,          // Taxa fixa de entrega em R$ (use 0 para grátis)
+    area_atendimento: "Bairros próximos — consulte disponibilidade"
+  };
+
+  const CATEGORIAS = [
+    { id: "Frutas",     nome: "Frutas" },
+    { id: "Verduras",   nome: "Verduras" },
+    { id: "Hortifruti", nome: "Hortifruti" }
+  ];
+
+  // Lista completa recuperada do PDV Sacolão (25 itens da planilha modelo)
+  // unidade: "kg" (por peso) ou "un" (por unidade) ou "pct" (pacote/bandeja)
+  // Para itens em kg, o cliente escolhe quilos em incrementos de 0,5
+  // Para os demais, incrementos de 1
+  const PRODUTOS = [
+    // FRUTAS
+    { id: "001", categoria: "Frutas",     nome: "Maçã vermelha",      preco: 8.99,  unidade: "kg", emoji: "🍎" },
+    { id: "002", categoria: "Frutas",     nome: "Banana prata",       preco: 3.50,  unidade: "kg", emoji: "🍌" },
+    { id: "003", categoria: "Frutas",     nome: "Laranja pêra",       preco: 5.99,  unidade: "kg", emoji: "🍊" },
+    { id: "013", categoria: "Frutas",     nome: "Melancia",           preco: 25.00, unidade: "un", emoji: "🍉" },
+    { id: "014", categoria: "Frutas",     nome: "Melão amarelo",      preco: 15.99, unidade: "un", emoji: "🍈" },
+    { id: "015", categoria: "Frutas",     nome: "Abacaxi",            preco: 8.99,  unidade: "un", emoji: "🍍" },
+    { id: "016", categoria: "Frutas",     nome: "Mamão papaia",       preco: 6.99,  unidade: "un", emoji: "🥭" },
+    { id: "017", categoria: "Frutas",     nome: "Morango",            preco: 12.99, unidade: "pct",emoji: "🍓" },
+    { id: "018", categoria: "Frutas",     nome: "Uva itália",         preco: 14.99, unidade: "kg", emoji: "🍇" },
+    { id: "019", categoria: "Frutas",     nome: "Limão tahiti",       preco: 4.99,  unidade: "kg", emoji: "🍋" },
+    { id: "020", categoria: "Frutas",     nome: "Pêssego",            preco: 11.99, unidade: "kg", emoji: "🍑" },
+
+    // VERDURAS
+    { id: "004", categoria: "Verduras",   nome: "Alface crespa",      preco: 2.50,  unidade: "un", emoji: "🥬" },
+    { id: "005", categoria: "Verduras",   nome: "Tomate caqui",       preco: 6.99,  unidade: "kg", emoji: "🍅" },
+    { id: "010", categoria: "Verduras",   nome: "Brócolis",           preco: 7.99,  unidade: "un", emoji: "🥦" },
+    { id: "011", categoria: "Verduras",   nome: "Couve-flor",         preco: 8.99,  unidade: "un", emoji: "🥦" },
+    { id: "012", categoria: "Verduras",   nome: "Repolho roxo",       preco: 4.99,  unidade: "kg", emoji: "🥬" },
+    { id: "021", categoria: "Verduras",   nome: "Rúcula",             preco: 3.99,  unidade: "un", emoji: "🌿" },
+    { id: "022", categoria: "Verduras",   nome: "Espinafre",          preco: 4.99,  unidade: "un", emoji: "🌱" },
+    { id: "023", categoria: "Verduras",   nome: "Acelga",             preco: 3.50,  unidade: "un", emoji: "🥬" },
+
+    // HORTIFRUTI
+    { id: "006", categoria: "Hortifruti", nome: "Cebola roxa",        preco: 4.50,  unidade: "kg", emoji: "🧅" },
+    { id: "007", categoria: "Hortifruti", nome: "Alho branco",        preco: 22.99, unidade: "kg", emoji: "🧄" },
+    { id: "008", categoria: "Hortifruti", nome: "Batata inglesa",     preco: 3.99,  unidade: "kg", emoji: "🥔" },
+    { id: "009", categoria: "Hortifruti", nome: "Cenoura",            preco: 2.99,  unidade: "kg", emoji: "🥕" },
+    { id: "024", categoria: "Hortifruti", nome: "Beterraba",          preco: 5.99,  unidade: "kg", emoji: "🥗" },
+    { id: "025", categoria: "Hortifruti", nome: "Abóbora cabotiana",  preco: 3.99,  unidade: "kg", emoji: "🎃" }
+  ];
+</script>
+
+<!-- ========================================================================
+  ESTRUTURA (não precisa editar daqui pra baixo)
+======================================================================== -->
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <h1 id="loja-nome"></h1>
+      <p id="loja-tagline"></p>
+    </div>
+    <button class="cart-btn" onclick="abrirCarrinho()">
+      Meu pedido
+      <span class="cart-count" id="cart-count">0</span>
+    </button>
+  </div>
+</header>
+
+<div class="info-loja" id="info-loja"></div>
+
+<nav class="categorias">
+  <div class="cat-scroll" id="cat-scroll"></div>
+</nav>
+
+<main>
+  <div class="aviso-peso">
+    <strong>ℹ️ Sobre itens por kg:</strong> o peso final pode variar levemente da quantidade escolhida.
+    O valor exato é confirmado na entrega.
+  </div>
+  <div id="produtos-container"></div>
+</main>
+
+<button class="flutuante" id="flutuante" onclick="abrirCarrinho()">
+  <span><span id="flutuante-qtd">0</span> itens no pedido</span>
+  <span class="flutuante-total" id="flutuante-total">R$ 0,00</span>
+</button>
+
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this) fecharCarrinho()">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Seu pedido</h2>
+      <button class="fechar" onclick="fecharCarrinho()">×</button>
+    </div>
+
+    <div class="modal-body" id="modal-body">
+      <div id="itens-lista"></div>
+
+      <div class="secao" id="secao-cliente" style="display:none">
+        <h3>Seus dados</h3>
+        <div class="form-grupo">
+          <label>Seu nome *</label>
+          <input type="text" id="nome" placeholder="Como te chamamos?">
+        </div>
+        <div class="form-grupo">
+          <label>Telefone *</label>
+          <input type="tel" id="telefone" placeholder="(31) 90000-0000">
+        </div>
+      </div>
+
+      <div class="secao" id="secao-entrega" style="display:none">
+        <h3>Entrega ou retirada</h3>
+        <div class="radio-grupo" id="tipo-entrega">
+          <div class="radio-opcao selecionado" data-valor="Entrega">Entregar</div>
+          <div class="radio-opcao" data-valor="Retirada">Vou buscar</div>
+        </div>
+        <div id="campos-entrega">
+          <div class="form-grupo" style="margin-top:10px">
+            <label>Endereço *</label>
+            <input type="text" id="endereco" placeholder="Rua e número">
+          </div>
+          <div class="form-linha">
+            <div class="form-grupo">
+              <label>Bairro *</label>
+              <input type="text" id="bairro" placeholder="Bairro">
+            </div>
+            <div class="form-grupo">
+              <label>Complemento</label>
+              <input type="text" id="complemento" placeholder="Apto, ref.">
+            </div>
+          </div>
+        </div>
+        <div class="form-linha" style="margin-top:10px">
+          <div class="form-grupo">
+            <label>Data</label>
+            <select id="data-entrega">
+              <option value="Hoje">Hoje</option>
+              <option value="Amanhã">Amanhã</option>
+              <option value="Combinar">A combinar</option>
+            </select>
+          </div>
+          <div class="form-grupo">
+            <label>Horário</label>
+            <select id="horario-entrega">
+              <option value="Manhã (8h–12h)">Manhã (8h–12h)</option>
+              <option value="Tarde (12h–18h)">Tarde (12h–18h)</option>
+              <option value="Combinar">A combinar</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="secao" id="secao-pagamento" style="display:none">
+        <h3>Pagamento</h3>
+        <div class="radio-grupo" id="tipo-pagamento">
+          <div class="radio-opcao selecionado" data-valor="Pix">Pix</div>
+          <div class="radio-opcao" data-valor="Dinheiro">Dinheiro</div>
+          <div class="radio-opcao" data-valor="Cartão na entrega">Cartão</div>
+        </div>
+        <div class="form-grupo" id="grupo-troco" style="display:none; margin-top:10px">
+          <label>Precisa de troco? Para quanto?</label>
+          <input type="text" id="troco" placeholder="Ex: 100 (deixe em branco se não precisa)">
+        </div>
+      </div>
+
+      <div class="secao" id="secao-extras" style="display:none">
+        <h3>Detalhes finais</h3>
+        <div class="form-grupo">
+          <label>Se faltar algum item, podemos substituir por similar?</label>
+          <div class="radio-grupo" id="substituir">
+            <div class="radio-opcao selecionado" data-valor="Sim">Sim, pode</div>
+            <div class="radio-opcao" data-valor="Não">Não, prefiro sem</div>
+          </div>
+        </div>
+        <div class="form-grupo">
+          <label>Observações</label>
+          <textarea id="obs" placeholder="Ex: banana bem madura, sem coentro..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer" id="modal-footer" style="display:none">
+      <div class="total-linha"><span>Subtotal</span><span id="subtotal">R$ 0,00</span></div>
+      <div class="total-linha" id="linha-entrega"><span>Taxa de entrega</span><span id="taxa">R$ 0,00</span></div>
+      <div class="total-linha grande"><span>Total</span><span id="total-final">R$ 0,00</span></div>
+      <div class="aviso-minimo" id="aviso-minimo" style="display:none"></div>
+      <button class="enviar-btn" id="btn-enviar" onclick="enviarWhatsApp()">
+        Enviar pedido pelo WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p id="rodape"></p>
+</footer>
+
+<script>
+  // Estado
+  let carrinho = JSON.parse(localStorage.getItem('carrinho_sacolao') || '{}');
+  let categoriaAtiva = 'todos';
+  let tipoEntrega = 'Entrega';
+  let tipoPagamento = 'Pix';
+  let aceitaSubstituicao = 'Sim';
+
+  // Utilidades
+  const formatarPreco = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const formatarQtd = (qtd, unidade) => {
+    if (unidade === 'kg') {
+      if (qtd < 1) return `${Math.round(qtd * 1000)} g`;
+      return `${qtd.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 3 })} kg`;
+    }
+    return `${qtd} ${unidade}`;
+  };
+  const incrementoDe = unidade => unidade === 'kg' ? 0.5 : 1;
+
+  // Inicialização
+  document.getElementById('loja-nome').textContent = LOJA.nome;
+  document.getElementById('loja-tagline').textContent = LOJA.tagline;
+  document.getElementById('info-loja').innerHTML =
+    `<strong>${LOJA.horario}</strong> <span>•</span> Pedido mínimo <strong>${formatarPreco(ENTREGA.pedido_minimo)}</strong> <span>•</span> Entrega <strong>${ENTREGA.taxa_entrega === 0 ? 'grátis' : formatarPreco(ENTREGA.taxa_entrega)}</strong>`;
+  document.getElementById('rodape').textContent = `${LOJA.nome} · ${LOJA.endereco}`;
+
+  // Categorias
+  const catScroll = document.getElementById('cat-scroll');
+  const todasCat = [{id:'todos', nome:'Todos'}, ...CATEGORIAS];
+  todasCat.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (c.id === 'todos' ? ' ativa' : '');
+    btn.textContent = c.nome;
+    btn.dataset.cat = c.id;
+    btn.onclick = () => filtrarCategoria(c.id);
+    catScroll.appendChild(btn);
+  });
+
+  function filtrarCategoria(id) {
+    categoriaAtiva = id;
+    document.querySelectorAll('.cat-btn').forEach(b => {
+      b.classList.toggle('ativa', b.dataset.cat === id);
+    });
+    renderizarProdutos();
+  }
+
+  // Produtos
+  function renderizarProdutos() {
+    const container = document.getElementById('produtos-container');
+    container.innerHTML = '';
+    const cats = categoriaAtiva === 'todos'
+      ? CATEGORIAS
+      : CATEGORIAS.filter(c => c.id === categoriaAtiva);
+
+    cats.forEach(cat => {
+      const produtosDaCat = PRODUTOS.filter(p => p.categoria === cat.id);
+      if (produtosDaCat.length === 0) return;
+
+      const titulo = document.createElement('h2');
+      titulo.className = 'categoria-titulo';
+      titulo.textContent = cat.nome;
+      container.appendChild(titulo);
+
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      produtosDaCat.forEach(p => grid.appendChild(criarCard(p)));
+      container.appendChild(grid);
+    });
+  }
+
+  function criarCard(p) {
+    const div = document.createElement('div');
+    div.className = 'produto';
+    const item = carrinho[p.id];
+    const controle = item
+      ? `<div class="produto-qtd">
+           <button onclick="alterarQtd('${p.id}', -${incrementoDe(p.unidade)})">−</button>
+           <span class="valor" onclick="editarQtdManual('${p.id}')">${formatarQtd(item.qtd, p.unidade)}</span>
+           <button onclick="alterarQtd('${p.id}', ${incrementoDe(p.unidade)})">+</button>
+         </div>`
+      : `<button class="produto-add" onclick="adicionarItem('${p.id}')">Adicionar</button>`;
+    div.innerHTML = `
+      <div class="produto-emoji">${p.emoji || '🥗'}</div>
+      <div class="produto-nome">${p.nome}</div>
+      <div class="produto-preco">${formatarPreco(p.preco)}<span class="unidade">/${p.unidade}</span></div>
+      ${controle}
+    `;
+    return div;
+  }
+
+  function adicionarItem(id) {
+    const p = PRODUTOS.find(x => x.id === id);
+    carrinho[id] = { id, nome: p.nome, preco: p.preco, unidade: p.unidade, qtd: 1 };
+    salvarCarrinho();
+    renderizarProdutos();
+    atualizarUICarrinho();
+  }
+
+  function alterarQtd(id, delta) {
+    if (!carrinho[id]) return;
+    const novaQtd = Math.round((carrinho[id].qtd + delta) * 1000) / 1000;
+    if (novaQtd <= 0) {
+      delete carrinho[id];
+    } else {
+      carrinho[id].qtd = novaQtd;
+    }
+    salvarCarrinho();
+    renderizarProdutos();
+    atualizarUICarrinho();
+    if (document.getElementById('modal-overlay').classList.contains('aberto')) {
+      renderizarCarrinho();
+    }
+  }
+
+  function editarQtdManual(id) {
+    if (!carrinho[id]) return;
+    const item = carrinho[id];
+    const label = item.unidade === 'kg' ? 'em kg (ex: 1,5 ou 0,75)' : `em ${item.unidade}`;
+    const atual = String(item.qtd).replace('.', ',');
+    const entrada = prompt(`Quanto de "${item.nome}"?\n(${label})`, atual);
+    if (entrada === null) return;
+    const valor = parseFloat(entrada.replace(',', '.'));
+    if (isNaN(valor) || valor <= 0) {
+      alert('Quantidade inválida.');
+      return;
+    }
+    if (item.unidade !== 'kg' && !Number.isInteger(valor)) {
+      alert('Este item é vendido só em unidades inteiras.');
+      return;
+    }
+    carrinho[id].qtd = valor;
+    salvarCarrinho();
+    renderizarProdutos();
+    atualizarUICarrinho();
+    if (document.getElementById('modal-overlay').classList.contains('aberto')) {
+      renderizarCarrinho();
+    }
+  }
+
+  function salvarCarrinho() {
+    localStorage.setItem('carrinho_sacolao', JSON.stringify(carrinho));
+  }
+
+  function totalItens() {
+    return Object.keys(carrinho).length;
+  }
+  function subtotalValor() {
+    return Object.values(carrinho).reduce((s, i) => s + i.qtd * i.preco, 0);
+  }
+  function taxaEntrega() {
+    return tipoEntrega === 'Entrega' ? ENTREGA.taxa_entrega : 0;
+  }
+  function totalValor() {
+    return subtotalValor() + taxaEntrega();
+  }
+
+  function atualizarUICarrinho() {
+    const qtd = totalItens();
+    document.getElementById('cart-count').textContent = qtd;
+    document.getElementById('flutuante-qtd').textContent = qtd;
+    document.getElementById('flutuante-total').textContent = formatarPreco(subtotalValor());
+    document.getElementById('flutuante').classList.toggle('visivel', qtd > 0);
+  }
+
+  // Modal
+  function abrirCarrinho() {
+    document.getElementById('modal-overlay').classList.add('aberto');
+    renderizarCarrinho();
+  }
+  function fecharCarrinho() {
+    document.getElementById('modal-overlay').classList.remove('aberto');
+  }
+
+  function renderizarCarrinho() {
+    const itens = Object.values(carrinho);
+    const lista = document.getElementById('itens-lista');
+
+    const secoes = ['secao-cliente','secao-entrega','secao-pagamento','secao-extras'];
+    const footer = document.getElementById('modal-footer');
+
+    if (itens.length === 0) {
+      lista.innerHTML = '<div class="vazio">Seu pedido está vazio.<br>Adicione produtos para começar.</div>';
+      secoes.forEach(id => document.getElementById(id).style.display = 'none');
+      footer.style.display = 'none';
+      return;
+    }
+
+    lista.innerHTML = '<div class="secao"><h3>Itens</h3>' + itens.map(i => `
+      <div class="item-carrinho">
+        <div class="item-info">
+          <div class="item-nome">${i.nome}</div>
+          <div class="item-preco">${formatarPreco(i.preco)}/${i.unidade} · Subtotal ${formatarPreco(i.preco * i.qtd)}</div>
+        </div>
+        <div class="qtd-controle">
+          <button class="qtd-btn" onclick="alterarQtd('${i.id}', -${incrementoDe(i.unidade)})">−</button>
+          <span class="qtd-valor" onclick="editarQtdManual('${i.id}')">${formatarQtd(i.qtd, i.unidade)}</span>
+          <button class="qtd-btn" onclick="alterarQtd('${i.id}', ${incrementoDe(i.unidade)})">+</button>
+        </div>
+      </div>
+    `).join('') + '</div>';
+
+    secoes.forEach(id => document.getElementById(id).style.display = 'block');
+    footer.style.display = 'block';
+
+    // Totais
+    const sub = subtotalValor();
+    document.getElementById('subtotal').textContent = formatarPreco(sub);
+    document.getElementById('taxa').textContent = formatarPreco(taxaEntrega());
+    document.getElementById('total-final').textContent = formatarPreco(totalValor());
+    document.getElementById('linha-entrega').style.display = tipoEntrega === 'Entrega' ? 'flex' : 'none';
+
+    // Pedido mínimo
+    const aviso = document.getElementById('aviso-minimo');
+    const btn = document.getElementById('btn-enviar');
+    if (sub < ENTREGA.pedido_minimo) {
+      const falta = ENTREGA.pedido_minimo - sub;
+      aviso.textContent = `Faltam ${formatarPreco(falta)} para atingir o pedido mínimo de ${formatarPreco(ENTREGA.pedido_minimo)}`;
+      aviso.style.display = 'block';
+      btn.disabled = true;
+    } else {
+      aviso.style.display = 'none';
+      btn.disabled = false;
+    }
+  }
+
+  // Radio grupos
+  document.querySelectorAll('#tipo-entrega .radio-opcao').forEach(el => {
+    el.onclick = () => {
+      document.querySelectorAll('#tipo-entrega .radio-opcao').forEach(x => x.classList.remove('selecionado'));
+      el.classList.add('selecionado');
+      tipoEntrega = el.dataset.valor;
+      document.getElementById('campos-entrega').style.display = tipoEntrega === 'Entrega' ? 'block' : 'none';
+      renderizarCarrinho();
+    };
+  });
+  document.querySelectorAll('#tipo-pagamento .radio-opcao').forEach(el => {
+    el.onclick = () => {
+      document.querySelectorAll('#tipo-pagamento .radio-opcao').forEach(x => x.classList.remove('selecionado'));
+      el.classList.add('selecionado');
+      tipoPagamento = el.dataset.valor;
+      document.getElementById('grupo-troco').style.display = tipoPagamento === 'Dinheiro' ? 'flex' : 'none';
+    };
+  });
+  document.querySelectorAll('#substituir .radio-opcao').forEach(el => {
+    el.onclick = () => {
+      document.querySelectorAll('#substituir .radio-opcao').forEach(x => x.classList.remove('selecionado'));
+      el.classList.add('selecionado');
+      aceitaSubstituicao = el.dataset.valor;
+    };
+  });
+
+  // Envio
+  function enviarWhatsApp() {
+    const nome = document.getElementById('nome').value.trim();
+    const telefone = document.getElementById('telefone').value.trim();
+    const endereco = document.getElementById('endereco').value.trim();
+    const bairro = document.getElementById('bairro').value.trim();
+    const complemento = document.getElementById('complemento').value.trim();
+    const dataEntrega = document.getElementById('data-entrega').value;
+    const horarioEntrega = document.getElementById('horario-entrega').value;
+    const troco = document.getElementById('troco').value.trim();
+    const obs = document.getElementById('obs').value.trim();
+
+    if (!nome) { alert('Informe seu nome.'); document.getElementById('nome').focus(); return; }
+    if (!telefone) { alert('Informe seu telefone.'); document.getElementById('telefone').focus(); return; }
+    if (tipoEntrega === 'Entrega') {
+      if (!endereco) { alert('Informe o endereço.'); document.getElementById('endereco').focus(); return; }
+      if (!bairro) { alert('Informe o bairro.'); document.getElementById('bairro').focus(); return; }
+    }
+
+    const itens = Object.values(carrinho);
+    let msg = `*NOVO PEDIDO — ${LOJA.nome}*\n\n`;
+    msg += `👤 *Cliente:* ${nome}\n`;
+    msg += `📱 *Telefone:* ${telefone}\n\n`;
+    msg += `📦 *${tipoEntrega}* — ${dataEntrega}, ${horarioEntrega}\n`;
+    if (tipoEntrega === 'Entrega') {
+      msg += `📍 ${endereco}, ${bairro}`;
+      if (complemento) msg += ` (${complemento})`;
+      msg += `\n`;
+    }
+    msg += `\n💳 *Pagamento:* ${tipoPagamento}`;
+    if (tipoPagamento === 'Dinheiro') {
+      msg += troco ? ` — troco para R$ ${troco}` : ` — não precisa de troco`;
+    }
+    msg += `\n\n🛒 *Itens:*\n`;
+    itens.forEach(i => {
+      msg += `• ${formatarQtd(i.qtd, i.unidade)} — ${i.nome} — ${formatarPreco(i.preco * i.qtd)}\n`;
+    });
+    msg += `\n_Subtotal:_ ${formatarPreco(subtotalValor())}\n`;
+    if (tipoEntrega === 'Entrega' && ENTREGA.taxa_entrega > 0) {
+      msg += `_Taxa de entrega:_ ${formatarPreco(ENTREGA.taxa_entrega)}\n`;
+    }
+    msg += `*TOTAL: ${formatarPreco(totalValor())}*\n\n`;
+    msg += `🔄 *Substituição se faltar item:* ${aceitaSubstituicao}\n`;
+    if (obs) msg += `\n📝 *Observações:* ${obs}\n`;
+    msg += `\n_Valores de itens por peso podem variar levemente conforme a pesagem._`;
+
+    const url = `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  }
+
+  // Iniciar
+  renderizarProdutos();
+  atualizarUICarrinho();
+</script>
+
+</body>
+</html>
