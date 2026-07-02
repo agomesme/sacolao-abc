@@ -1019,20 +1019,20 @@
     }
 
     const itens = Object.values(carrinho);
-    let msg = `*NOVO PEDIDO — ${LOJA.nome}*\n\n`;
-    msg += `👤 *Cliente:* ${nome}\n`;
-    msg += `📱 *Telefone:* ${telefone}\n\n`;
-    msg += `📦 *${tipoEntrega}* — ${dataEntrega}, ${horarioEntrega}\n`;
+   let msg = `*NOVO PEDIDO — ${LOJA.nome}*\n\n`;
+    msg += `⭐ *Cliente:* ${nome}\n`;
+    msg += `☎ *Telefone:* ${telefone}\n\n`;
+    msg += `🚚 *${tipoEntrega}* — ${dataEntrega}, ${horarioEntrega}\n`;
     if (tipoEntrega === 'Entrega') {
-      msg += `📍 ${endereco}, ${bairro}`;
+      msg += `🏠 ${endereco}, ${bairro}`;
       if (complemento) msg += ` (${complemento})`;
       msg += `\n`;
     }
-    msg += `\n💳 *Pagamento:* ${tipoPagamento}`;
+    msg += `\n💰 *Pagamento:* ${tipoPagamento}`;
     if (tipoPagamento === 'Dinheiro') {
       msg += troco ? ` — troco para R$ ${troco}` : ` — não precisa de troco`;
     }
-    msg += `\n\n🛒 *Itens:*\n`;
+    msg += `\n\n📋 *Itens:*\n`;
     itens.forEach(i => {
       msg += `• ${formatarQtd(i.qtd, i.unidade)} — ${i.nome} — ${formatarPreco(i.preco * i.qtd)}\n`;
     });
@@ -1041,8 +1041,8 @@
       msg += `_Taxa de entrega:_ ${formatarPreco(ENTREGA.taxa_entrega)}\n`;
     }
     msg += `*TOTAL: ${formatarPreco(totalValor())}*\n\n`;
-    msg += `🔄 *Substituição se faltar item:* ${aceitaSubstituicao}\n`;
-    if (obs) msg += `\n📝 *Observações:* ${obs}\n`;
+  msg += `✅ *Substituição se faltar item:* ${aceitaSubstituicao}\n`;
+    if (obs) msg += `\n✏ *Observações:* ${obs}\n`;
     msg += `\n_Valores de itens por peso podem variar levemente conforme a pesagem._`;
 
     const url = `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent(msg)}`;
